@@ -4,20 +4,25 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 	float moveSpeed;
 	public bool onLadder;
-
+	public int loot;
+	public GameObject usable;
+	char upgrades;
 	// Use this for initialization
 	void Start () 
 	{
 		moveSpeed = 3.0f;
 		onLadder = false;
+		usable = null;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
 		Movement ();
-
-
+		if (Input.GetKey ("e"))
+			Use ();
+		else if (Input.GetKeyDown ("q"))
+			GetComponent<Invisiblilityscript> ().Invisibility ();
 	}
 
 	void Movement()
@@ -35,13 +40,30 @@ public class PlayerController : MonoBehaviour {
 		transform.position = temp;
 	}
 
+	void Use()
+	{
+		if (usable == null)
+			return;
 
+		if (usable.tag == "chest") 
+		{
+			if(usable.GetComponent<containerscript>().inUse() <= 0)
+				loot += usable.GetComponent<containerscript>().Payout();
+		}
+	}
 
+	void OnCollisionEnter2D(Collision2D col)
+	{
+		if (col.gameObject.tag != "Enemy")
+			usable = col.gameObject;
+	}
 
+	void OnCollisionExit2D(Collision2D col)
+	{
+		usable = null;
+	}
 
-
-
-
+	 
 
 
 }
