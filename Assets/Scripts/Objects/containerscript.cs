@@ -8,6 +8,7 @@ public class containerscript : MonoBehaviour {
 	float delay = 1.0f;
 	int value = 10;
 	GameObject loot = null;
+	public Sprite opened;
 	// Use this for initialization
 	public void SetUp (float _delay, int _value, GameObject _loot) 
 	{
@@ -27,6 +28,7 @@ public class containerscript : MonoBehaviour {
 	{
 		int temp = value;
 		value = 0;
+		GetComponent<SpriteRenderer> ().sprite = opened;
 		return temp;
 	}
 
