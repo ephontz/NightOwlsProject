@@ -19,7 +19,7 @@ public abstract class EnemyBase : MonoBehaviour {
 
 	// Use this for initialization
 	public virtual void Start () {
-		anchorOrig = anchor.GetComponent<Transform> ().position;
+		anchorOrig = anchor.GetComponent<AnchorBehavior> ().location;
 	}
 	
 	// Update is called once per frame

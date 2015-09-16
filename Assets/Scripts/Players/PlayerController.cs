@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		this.GetComponent<Invisiblilityscript> ().SetExposure (0);
 
-		GetComponent<Transform> ().position = new Vector3 (20.0f, 20.0f, 0.0f);
+		//GetComponent<Transform> ().position = new Vector3 (20.0f, 20.0f, 0.0f);
 	}
 	void Use()
 	{

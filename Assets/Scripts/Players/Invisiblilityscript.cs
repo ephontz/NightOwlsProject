@@ -5,7 +5,7 @@ public enum lightLevel {invisible = 0, dark =1, shadow = 2, normal = 3, full = 4
 
 public class Invisiblilityscript : MonoBehaviour {
 
-	int curLight = 5;
+	public int curLight = 3;
 	bool invisActive = false;
 	bool onCooldown = false;
 	float duration = 3;

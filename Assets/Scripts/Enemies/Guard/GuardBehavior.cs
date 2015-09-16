@@ -32,7 +32,9 @@ public class GuardBehavior : EnemyBase {
 
 	// Use this for initialization
 	public override void Start () {
-		currState = ENMY_STATES.PATROL;
+		base.Start ();
+
+		ChangeENMYState(ENMY_STATES.PATROL);
 
 		killRange = 1.0f;
 
@@ -103,7 +105,7 @@ public class GuardBehavior : EnemyBase {
 		}
 
 		//  Step Four:
-		//			If the player is still in the patrol state, then check
+		//			If the unit is still in the patrol state, then check
 		//			if the unit is outside of it's tether range.
 		if (currState == ENMY_STATES.PATROL && !CheckSign(wlkSpd)) 
 		{
@@ -169,7 +171,7 @@ public class GuardBehavior : EnemyBase {
 		{
 			if (Mathf.Abs(targPos.x - GetComponent<Transform>().position.x) <= .25f)
 			{
-				currState = ENMY_STATES.PATROL;
+				ChangeENMYState(ENMY_STATES.PATROL);
 
 				targPos = anchorOrig;
 			}
@@ -236,12 +238,12 @@ public class GuardBehavior : EnemyBase {
 			{
 				player.GetComponent<PlayerController>().PlayerDeath(TYPE_DEATH.MELEE);
 
-				currState = ENMY_STATES.PATROL;
+				ChangeENMYState(ENMY_STATES.PATROL);
 			}
 
 			else if (Mathf.Abs(targPos.x - GetComponent<Transform>().position.x) <= .25f)
 			{
-				currState = ENMY_STATES.PATROL;
+				ChangeENMYState(ENMY_STATES.PATROL);
 				
 				targPos = anchorOrig;
 			}
@@ -255,6 +257,15 @@ public class GuardBehavior : EnemyBase {
 
 	}
 
+	//  This function is refactored code with the purpose of changing the
+	//  unit's state.  This is made with plans to also attach the particle system
+	//  and sound alerts to this function.
+	//  Parameters:			The ENMY_STATE is what the currState is reassigned to.
+	//  Returns:		void
+	void ChangeENMYState(ENMY_STATES change)
+	{
+		currState = change;
+	}
 
 	//  This function will check the sign of the value
 	//  Returns:		True == RHSide	False == LHSide
@@ -282,7 +293,7 @@ public class GuardBehavior : EnemyBase {
 		{
 			if (Mathf.Abs (player.GetComponent<Transform> ().position.x - GetComponent<Transform> ().position.x) < reactRange 	// If the player is in range
 			    && player.GetComponent<Transform> ().position.x < GetComponent<Transform> ().position.x				// If the player is right of unit
-			    && Mathf.Abs (player.GetComponent<Transform> ().position.y - GetComponent<Transform> ().position.y) < 10) 			// Limit vertical deviation
+			    && Mathf.Abs (player.GetComponent<Transform> ().position.y - GetComponent<Transform> ().position.y) < 1.5) 			// Limit vertical deviation
 			{			
 					return true;
 			}
@@ -295,7 +306,7 @@ public class GuardBehavior : EnemyBase {
 		{
 			if (Mathf.Abs (player.GetComponent<Transform> ().position.x - GetComponent<Transform> ().position.x) < reactRange 	// If the player is in range
 				&& player.GetComponent<Transform> ().position.x > GetComponent<Transform> ().position.x				// If the player is right of unit
-				&& Mathf.Abs (player.GetComponent<Transform> ().position.y - GetComponent<Transform> ().position.y) < 10) 			// Limit vertical deviation
+				&& Mathf.Abs (player.GetComponent<Transform> ().position.y - GetComponent<Transform> ().position.y) < 1.5) 			// Limit vertical deviation
 			{			
 				return true;
 			}
@@ -325,7 +336,7 @@ public class GuardBehavior : EnemyBase {
 			case 0:
 			case 1:
 			{
-				currState = ENMY_STATES.PATROL;
+				ChangeENMYState(ENMY_STATES.PATROL);
 				break;
 			}
 
@@ -333,7 +344,7 @@ public class GuardBehavior : EnemyBase {
 			case 2:
 			case 3:
 			{
-				currState = ENMY_STATES.SEARCH;
+				ChangeENMYState(ENMY_STATES.SEARCH);
 				targPos = player.GetComponent<Transform> ().position;
 				break;
 			}
@@ -347,18 +358,18 @@ public class GuardBehavior : EnemyBase {
 			case 9:
 			case 10:
 			{
-				currState = ENMY_STATES.ATTACK;
+				ChangeENMYState(ENMY_STATES.ATTACK);
 				targPos = player.GetComponent<Transform> ().position;
 				break;
 			}
 
-			//  Any other light exposures, assuming there will never  be an exposure greater than 10
+			//  Any other light exposures, hopefully there will never  be an exposure greater than 10
 			default:
 			{
 				if (player.GetComponent<Invisiblilityscript> ().LightExposure () < 0)
-					currState = ENMY_STATES.PATROL;
+					ChangeENMYState(ENMY_STATES.PATROL);
 				else if (player.GetComponent<Invisiblilityscript> ().LightExposure () > 10) {
-					currState = ENMY_STATES.ATTACK;
+					ChangeENMYState(ENMY_STATES.ATTACK);
 					targPos = player.GetComponent<Transform> ().position;
 				}
 				break;
@@ -373,7 +384,7 @@ public class GuardBehavior : EnemyBase {
 			case 0:
 			case 1:
 			{
-				currState = ENMY_STATES.SEARCH;
+				ChangeENMYState(ENMY_STATES.SEARCH);
 				break;
 			}
 
@@ -381,7 +392,7 @@ public class GuardBehavior : EnemyBase {
 			case 2:
 			case 3:
 			{
-				currState = ENMY_STATES.SEARCH;
+				ChangeENMYState(ENMY_STATES.SEARCH);
 				targPos = player.GetComponent<Transform> ().position;
 				break;
 			}
@@ -395,18 +406,18 @@ public class GuardBehavior : EnemyBase {
 			case 9:
 			case 10:
 			{
-				currState = ENMY_STATES.ATTACK;
+				ChangeENMYState(ENMY_STATES.ATTACK);
 				targPos = player.GetComponent<Transform> ().position;
 				break;
 			}
 
-			//  Any other light exposures, assuming there will never  be an exposure greater than 10
+			//  Any other light exposures, hopefully there will never  be an exposure greater than 10
 			default:
 			{
 				if (player.GetComponent<Invisiblilityscript> ().LightExposure () < 0)
-					currState = ENMY_STATES.SEARCH;
+					ChangeENMYState(ENMY_STATES.SEARCH);
 				else if (player.GetComponent<Invisiblilityscript> ().LightExposure () > 10) {
-					currState = ENMY_STATES.ATTACK;
+					ChangeENMYState(ENMY_STATES.ATTACK);
 					targPos = player.GetComponent<Transform> ().position;
 				}
 				break;
@@ -421,7 +432,7 @@ public class GuardBehavior : EnemyBase {
 			case 0:
 			case 1:
 			{
-				currState = ENMY_STATES.SEARCH;
+				ChangeENMYState(ENMY_STATES.SEARCH);
 				break;
 			}
 
@@ -429,7 +440,7 @@ public class GuardBehavior : EnemyBase {
 			case 2:
 			case 3:
 			{
-				currState = ENMY_STATES.SEARCH;
+				ChangeENMYState(ENMY_STATES.SEARCH);
 				targPos = player.GetComponent<Transform> ().position;
 				break;
 			}
@@ -443,18 +454,18 @@ public class GuardBehavior : EnemyBase {
 			case 9:
 			case 10:
 			{
-				currState = ENMY_STATES.ATTACK;
+				ChangeENMYState(ENMY_STATES.ATTACK);
 				targPos = player.GetComponent<Transform> ().position;
 				break;
 			}
 
-			//  Any other light exposures, assuming there will never  be an exposure greater than 10
+			//  Any other light exposures, hopefully there will never  be an exposure greater than 10
 			default:
 			{
 				if (player.GetComponent<Invisiblilityscript> ().LightExposure () < 0)
-					currState = ENMY_STATES.SEARCH;
+					ChangeENMYState(ENMY_STATES.SEARCH);
 				else if (player.GetComponent<Invisiblilityscript> ().LightExposure () > 10) {
-					currState = ENMY_STATES.ATTACK;
+					ChangeENMYState(ENMY_STATES.ATTACK);
 					targPos = player.GetComponent<Transform> ().position;
 				}
 				break;
