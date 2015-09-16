@@ -47,9 +47,11 @@ public class PlayerController : MonoBehaviour {
 	//  This one function will handle the multiple types of death possible to the player
 	//  Parameters:		The function takes in a TYPE_DEATH and uses that to determine
 	//					which actions to take.
-	void PlayerDeath(TYPE_DEATH method)
+	public void PlayerDeath(TYPE_DEATH method)
 	{
+		this.GetComponent<Invisiblilityscript> ().SetExposure (0);
 
+		GetComponent<Transform> ().position = new Vector3 (20.0f, 20.0f, 0.0f);
 	}
 	void Use()
 	{

@@ -1,8 +1,15 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 
+
 public class GuardBehavior : EnemyBase {
+	//  Constants
+	const bool LEFT_H = false;
+
+	const bool RIGHT_H = true;
+
+
 
 	//  The guard needs three different movement speeds, coinciding with
 	//  the differents states AI
@@ -27,7 +34,7 @@ public class GuardBehavior : EnemyBase {
 	public override void Start () {
 		currState = ENMY_STATES.PATROL;
 
-		killRange = 2.0f;
+		killRange = 1.0f;
 
 		reactRange = 5.0f;
 	}
@@ -74,96 +81,36 @@ public class GuardBehavior : EnemyBase {
 		//  		Check for player position relative to the player.
 		//  		The player must be in-front of the unit, and within 
 		//			the rectRange.
-		if (wlkSpd < 0) {																							// If the unit is moving left
-			if (Mathf.Abs (player.GetComponent<Transform> ().position.x - GetComponent<Transform> ().position.x) < reactRange 	// If the player is in range
-				&& player.GetComponent<Transform> ().position.x < GetComponent<Transform> ().position.x				// If the player is left of unit
-				&& Mathf.Abs (player.GetComponent<Transform> ().position.y - GetComponent<Transform> ().position.y) < 10) {			// Limit vertical deviation
+
+		//  Check the left hand side of the player
+		if (!CheckSign(wlkSpd)) {
+			if (IsPlayerInRange(player, LEFT_H)) {
 				//  Step Three:
 				//			Check the players light level.  Respond
 				//			to the players exposure level.
-				switch (player.GetComponent<PlayerController> ().lightExpo) {
-				//  If the light exposure is 0 or 1
-				case 0:
-				case 1:
-					currState = ENMY_STATES.PATROL;
-					break;
-
-				//  If the light exposure is 2 or 3
-				case 2:
-				case 3:
-					currState = ENMY_STATES.SEARCH;
-					break;
-
-				//  If the light exposure is greater than or equal to 4
-				case 4:
-				case 5:
-				case 6:
-				case 7:
-				case 8:
-				case 9:
-				case 10:
-					currState = ENMY_STATES.ATTACK;
-					break;
-
-				//  Any other light exposures, assuming there will never  be an exposure greater than 10
-				default:
-					if (player.GetComponent<PlayerController> ().lightExpo < 0)
-						currState = ENMY_STATES.PATROL;
-					else if (player.GetComponent<PlayerController> ().lightExpo > 10)
-						currState = ENMY_STATES.ATTACK;
-					break;
-				}
+				CheckPlayerExposure(player, currState);
 			}
-		} else if (wlkSpd > 0) {
-			if (Mathf.Abs (player.GetComponent<Transform> ().position.x - GetComponent<Transform> ().position.x) < reactRange 	// If the player is in range
-				&& player.GetComponent<Transform> ().position.x > GetComponent<Transform> ().position.x				// If the player is right of unit
-				&& Mathf.Abs (player.GetComponent<Transform> ().position.y - GetComponent<Transform> ().position.y) < 10) {			// Limit vertical deviation
+		} 
+
+		//  Check the right hand side of the player
+		else if (CheckSign(wlkSpd)) {
+			if (IsPlayerInRange(player, RIGHT_H)) {
 				//  Step Three:
 				//			Check the players light level.  Respond
 				//			to the players exposure level.
-				switch (player.GetComponent<PlayerController> ().lightExpo) {
-				//  If the light exposure is 0 or 1
-				case 0:
-				case 1:
-					currState = ENMY_STATES.PATROL;
-					break;
-					
-				//  If the light exposure is 2 or 3
-				case 2:
-				case 3:
-					currState = ENMY_STATES.SEARCH;
-					break;
-					
-				//  If the light exposure is greater than or equal to 4
-				case 4:
-				case 5:
-				case 6:
-				case 7:
-				case 8:
-				case 9:
-				case 10:
-					currState = ENMY_STATES.ATTACK;
-					break;
-					
-				//  Any other light exposures, assuming there will never  be an exposure greater than 10
-				default:
-					if (player.GetComponent<PlayerController> ().lightExpo < 0)
-						currState = ENMY_STATES.PATROL;
-					else if (player.GetComponent<PlayerController> ().lightExpo > 10)
-						currState = ENMY_STATES.ATTACK;
-					break;
-				}
+				CheckPlayerExposure (player, currState);
 			}
 		}
 
 		//  Step Four:
 		//			If the player is still in the patrol state, then check
 		//			if the unit is outside of it's tether range.
-		if (currState == ENMY_STATES.PATROL && wlkSpd < 0) {
+		if (currState == ENMY_STATES.PATROL && !CheckSign(wlkSpd)) 
+		{
 			if (GetComponent<Transform> ().position.x < (anchorOrig.x - leash))
 				wlkSpd = -wlkSpd;
 		}
-		else if (currState == ENMY_STATES.PATROL && wlkSpd > 0) {
+		else if (currState == ENMY_STATES.PATROL && CheckSign(wlkSpd)) {
 			if (GetComponent<Transform> ().position.x > anchorOrig.x + leash)
 				wlkSpd = -wlkSpd;
 		}
@@ -177,7 +124,56 @@ public class GuardBehavior : EnemyBase {
 	//					in hight exposure, the unit enters attack mode.
 	public override void SearchBehavior(GameObject player)
 	{
+		//  Step One:
+		//			The unit moves toward the last known position.
+		if (CheckSign(targPos.x) != CheckSign (srchSpd))
+			srchSpd = -srchSpd;
 
+		GetComponent<Transform> ().position += new Vector3(srchSpd, 0, 0) * Time.deltaTime;
+
+		//  Step Two:
+		//			Check for player position relative to the player.
+		//  		The player must be in-front of the unit, and within 
+		//			the rectRange.
+
+		//  Check the left hand side
+		if (!CheckSign (srchSpd)) 
+		{
+			if (IsPlayerInRange(player, LEFT_H))
+			{
+				//  Step Three:
+				//			Check the players light level.  Respond
+				//			to the players exposure level.
+				CheckPlayerExposure(player, currState);
+			}
+		}
+
+		//  Check the right hand side
+		if (CheckSign (srchSpd)) 
+		{
+			if (IsPlayerInRange(player, RIGHT_H))
+			{
+				//  Step Three:
+				//			Check the players light level.  Respond
+				//			to the players exposure level.
+				CheckPlayerExposure(player, currState);
+			}
+		}
+
+		//  Step Four:
+		//			If the unit is still in the search state, check
+		//			if the unit has reached the location the player
+		//			was last seen at.  If not, continue searching.
+		//			If yes, return to normal patrol.
+		if (currState == ENMY_STATES.SEARCH) 
+		{
+			if (Mathf.Abs(targPos.x - GetComponent<Transform>().position.x) <= .25f)
+			{
+				currState = ENMY_STATES.PATROL;
+
+				targPos = anchorOrig;
+			}
+		}
 	}
 
 	//  This function will be called in update if the guard is in the ATTACK
@@ -188,7 +184,68 @@ public class GuardBehavior : EnemyBase {
 	//					triggers the kill action.
 	public override void AttackBehavior(GameObject player)
 	{
+		//  Step One:
+		//			The unit moves toward the last known position.
+		if (CheckSign (attkSpd) != CheckSign (targPos.x))
+			attkSpd = -attkSpd;
 
+		GetComponent<Transform> ().position += new Vector3 (attkSpd, 0, 0) * Time.deltaTime;
+
+		//  Step Two:
+		//			Check for player position relative to the player.
+		//  		The player must be in-front of the unit, and within 
+		//			the rectRange.
+
+		//  Check the left hand side
+		if (!CheckSign (attkSpd)) 
+		{
+			if (IsPlayerInRange(player, LEFT_H))
+			{
+				//  Step Three:
+				//			Check the players light level.  Respond
+				//			to the players exposure level.
+				CheckPlayerExposure(player, currState);
+			}
+		}
+
+		//  Check the right hand side
+		if (CheckSign (attkSpd)) 
+		{
+			if (IsPlayerInRange(player, RIGHT_H))
+			{
+				//  Step Three:
+				//			Check the players light level.  Respond
+				//			to the players exposure level.
+				CheckPlayerExposure(player, currState);
+			}
+		}
+
+		//  Step Four:
+		//			If the unit is still in the attack state, check
+		//			if the unit has reached the location the player
+		//			was last seen at.  If not, continue attacking.
+		//			If yes, return to searching.
+		if (currState == ENMY_STATES.ATTACK)
+		{
+			//  UNIQUE:
+			//			If the player is within the unit's kill range,
+			//			invoke the layers death function passing the correct
+			//			enemy type.
+			if (Mathf.Abs(player.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < killRange
+			    && Mathf.Abs (player.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .5f)
+			{
+				player.GetComponent<PlayerController>().PlayerDeath(TYPE_DEATH.MELEE);
+
+				currState = ENMY_STATES.PATROL;
+			}
+
+			else if (Mathf.Abs(targPos.x - GetComponent<Transform>().position.x) <= .25f)
+			{
+				currState = ENMY_STATES.PATROL;
+				
+				targPos = anchorOrig;
+			}
+		}
 	}
 
 	//  This function will be called in update if the guard is in the COORD
@@ -196,5 +253,213 @@ public class GuardBehavior : EnemyBase {
 	public override void CoordinatedBehavior(GameObject player)
 	{
 
+	}
+
+
+	//  This function will check the sign of the value
+	//  Returns:		True == RHSide	False == LHSide
+	bool CheckSign(float f)
+	{
+		if (f >= 0)
+			return true;
+		else
+			return false;
+	}
+
+	//  This function will check if the player is in range and in front of the
+	//  player.
+	//  Parameters:			The boolean will be used to determine whether to check
+	//						the right hand side or left hand side of the unit.
+	//
+	//			True = right			False = left
+	//
+	//  Returns:			True if player is in range.
+	bool IsPlayerInRange(GameObject player, bool direction)
+	{
+
+		// Left
+		if (!direction) 
+		{
+			if (Mathf.Abs (player.GetComponent<Transform> ().position.x - GetComponent<Transform> ().position.x) < reactRange 	// If the player is in range
+			    && player.GetComponent<Transform> ().position.x < GetComponent<Transform> ().position.x				// If the player is right of unit
+			    && Mathf.Abs (player.GetComponent<Transform> ().position.y - GetComponent<Transform> ().position.y) < 10) 			// Limit vertical deviation
+			{			
+					return true;
+			}
+
+				else return false;
+		}
+		
+		//  Right
+		if (direction) 
+		{
+			if (Mathf.Abs (player.GetComponent<Transform> ().position.x - GetComponent<Transform> ().position.x) < reactRange 	// If the player is in range
+				&& player.GetComponent<Transform> ().position.x > GetComponent<Transform> ().position.x				// If the player is right of unit
+				&& Mathf.Abs (player.GetComponent<Transform> ().position.y - GetComponent<Transform> ().position.y) < 10) 			// Limit vertical deviation
+			{			
+				return true;
+			}
+
+			else return false;
+		}
+
+		//  OMGWTFBBQ
+		else return false;
+	}
+
+	//  This function will check the player's light exposure.  The function
+	//
+	//  Parameters:			The GameObject is a reference to the player and
+	//						is used to extract information about the light
+	//						exposure.  The ENMY_STATES enum is used to detemine
+	//						which switch statement is used when called.
+	//
+	//  Returns;			void
+	void CheckPlayerExposure(GameObject player, ENMY_STATES cState)
+	{
+		if (cState == ENMY_STATES.PATROL) 
+		{
+			switch (player.GetComponent<Invisiblilityscript> ().LightExposure ()) 
+			{
+			//  If the light exposure is 0 or 1
+			case 0:
+			case 1:
+			{
+				currState = ENMY_STATES.PATROL;
+				break;
+			}
+
+			//  If the light exposure is 2 or 3
+			case 2:
+			case 3:
+			{
+				currState = ENMY_STATES.SEARCH;
+				targPos = player.GetComponent<Transform> ().position;
+				break;
+			}
+
+			//  If the light exposure is greater than or equal to 4
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+			{
+				currState = ENMY_STATES.ATTACK;
+				targPos = player.GetComponent<Transform> ().position;
+				break;
+			}
+
+			//  Any other light exposures, assuming there will never  be an exposure greater than 10
+			default:
+			{
+				if (player.GetComponent<Invisiblilityscript> ().LightExposure () < 0)
+					currState = ENMY_STATES.PATROL;
+				else if (player.GetComponent<Invisiblilityscript> ().LightExposure () > 10) {
+					currState = ENMY_STATES.ATTACK;
+					targPos = player.GetComponent<Transform> ().position;
+				}
+				break;
+			}
+			}
+
+		} 
+
+		else if (cState == ENMY_STATES.SEARCH) {
+			switch (player.GetComponent<Invisiblilityscript> ().LightExposure ()) {
+			//  If the light exposure is 0 or 1
+			case 0:
+			case 1:
+			{
+				currState = ENMY_STATES.SEARCH;
+				break;
+			}
+
+			//  If the light exposure is 2 or 3
+			case 2:
+			case 3:
+			{
+				currState = ENMY_STATES.SEARCH;
+				targPos = player.GetComponent<Transform> ().position;
+				break;
+			}
+
+			//  If the light exposure is greater than or equal to 4
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+			{
+				currState = ENMY_STATES.ATTACK;
+				targPos = player.GetComponent<Transform> ().position;
+				break;
+			}
+
+			//  Any other light exposures, assuming there will never  be an exposure greater than 10
+			default:
+			{
+				if (player.GetComponent<Invisiblilityscript> ().LightExposure () < 0)
+					currState = ENMY_STATES.SEARCH;
+				else if (player.GetComponent<Invisiblilityscript> ().LightExposure () > 10) {
+					currState = ENMY_STATES.ATTACK;
+					targPos = player.GetComponent<Transform> ().position;
+				}
+				break;
+			}
+			}
+		} 
+
+		else if (cState == ENMY_STATES.ATTACK) 
+		{
+			switch (player.GetComponent<Invisiblilityscript> ().LightExposure ()) {
+			//  If the light exposure is 0 or 1
+			case 0:
+			case 1:
+			{
+				currState = ENMY_STATES.SEARCH;
+				break;
+			}
+
+			//  If the light exposure is 2 or 3
+			case 2:
+			case 3:
+			{
+				currState = ENMY_STATES.SEARCH;
+				targPos = player.GetComponent<Transform> ().position;
+				break;
+			}
+
+			//  If the light exposure is greater than or equal to 4
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+			{
+				currState = ENMY_STATES.ATTACK;
+				targPos = player.GetComponent<Transform> ().position;
+				break;
+			}
+
+			//  Any other light exposures, assuming there will never  be an exposure greater than 10
+			default:
+			{
+				if (player.GetComponent<Invisiblilityscript> ().LightExposure () < 0)
+					currState = ENMY_STATES.SEARCH;
+				else if (player.GetComponent<Invisiblilityscript> ().LightExposure () > 10) {
+					currState = ENMY_STATES.ATTACK;
+					targPos = player.GetComponent<Transform> ().position;
+				}
+				break;
+			}
+			}
+		}
 	}
 }
