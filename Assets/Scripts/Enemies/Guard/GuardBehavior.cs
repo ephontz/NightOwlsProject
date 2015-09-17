@@ -260,6 +260,9 @@ public class GuardBehavior : EnemyBase {
 
 	}
 
+	//  This function handles advanced pathing.  
+
+
 	//  This function is refactored code with the purpose of changing the
 	//  unit's state.  This is made with plans to also attach the particle system
 	//  and sound alerts to this function.
