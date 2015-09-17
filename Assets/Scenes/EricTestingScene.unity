@@ -176,6 +176,10 @@ Prefab:
       propertyPath: nxtlvl
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 155022, guid: 8884163dd59413b4e925aab2e9b4cc97, type: 2}
+      propertyPath: m_TagString
+      value: Exit
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8884163dd59413b4e925aab2e9b4cc97, type: 2}
   m_IsPrefabParent: 0
