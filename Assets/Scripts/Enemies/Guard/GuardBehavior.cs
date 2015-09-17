@@ -28,6 +28,9 @@ public class GuardBehavior : EnemyBase {
 	//  The position toward which the guard will walk in search and attack modes
 	Vector3 targPos;
 
+	//  
+	LAD_MOVEMENT ladMove = LAD_MOVEMENT.STAY;
+
 
 
 	// Use this for initialization
@@ -265,6 +268,18 @@ public class GuardBehavior : EnemyBase {
 	void ChangeENMYState(ENMY_STATES change)
 	{
 		currState = change;
+	}
+
+	//  This function changes the unit's LAD_MOVEMENT
+	void SetLadMovement(LAD_MOVEMENT dir)
+	{
+
+	}
+
+	//  This function returns the unit's LAD_MOVEMENT
+	public LAD_MOVEMENT GetLadMovement()
+	{
+		return ladMove;
 	}
 
 	//  This function will check the sign of the value
