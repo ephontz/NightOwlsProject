@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum TYPE_DEATH {MELEE = 0, RANGED, SWARM}
+public enum TYPE_DEATH {MELEE = 0, RANGED, SWARM};
+public enum LAD_MOVEMENT {DOWN, STAY, UP};
 
 public class PlayerController : MonoBehaviour {
 	float moveSpeed;
@@ -16,6 +17,11 @@ public class PlayerController : MonoBehaviour {
 	float jumpForce = 600f;
 	float jumpNumber = 0;
 
+	//  The us of a ladder involves locking x-axis movement
+	bool horizLock;
+	//  and allowing the elevator to know whether the unit is moving up or down.
+	public LAD_MOVEMENT ladMove = LAD_MOVEMENT.STAY;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -29,6 +35,7 @@ public class PlayerController : MonoBehaviour {
 	void Update () 
 	{
 		Movement ();
+
 		if (Input.GetKey ("e"))
 			Use ();
 		else if (Input.GetKeyDown ("q"))
@@ -43,18 +50,36 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
+
+	//  Fixed Update is called every two frames and should be used for any Rigid
+	//  Body or Physics functionality
+	void FixedUpdate()
+	{
+
+	}
+
 	void Movement()
 	{
 		//Movement
 		Vector3 temp = transform.position;
+
+		//  If there is anything limiting the player's horizontal movement
+		//		(i.e. being on a ladder)
+		//  lock their horizontal controls
 		if (Input.GetKey ("a"))
 			temp.x -= moveSpeed * Time.deltaTime;
 		else if (Input.GetKey ("d"))
 			temp.x += moveSpeed * Time.deltaTime;
-		else if (Input.GetKey ("w") && onLadder)
-			temp.y += moveSpeed * Time.deltaTime;
-		else if (Input.GetKey ("s") && onLadder)
-			temp.y -= moveSpeed * Time.deltaTime;
+		
+
+		if (Input.GetKey("w"))
+			ladMove = LAD_MOVEMENT.UP;
+		else if (Input.GetKey("s"))
+			ladMove = LAD_MOVEMENT.DOWN;
+
+		else ladMove = LAD_MOVEMENT.STAY;
+
+
 		transform.position = temp;
 	}
 
@@ -63,7 +88,8 @@ public class PlayerController : MonoBehaviour {
 	//					which actions to take.
 	public void PlayerDeath(TYPE_DEATH method)
 	{
-		this.GetComponent<Invisiblilityscript> ().SetExposure (0);
+		if (method == TYPE_DEATH.MELEE)
+			this.GetComponent<Invisiblilityscript> ().SetExposure (0);
 
 		//GetComponent<Transform> ().position = new Vector3 (20.0f, 20.0f, 0.0f);
 	}
@@ -96,7 +122,18 @@ public class PlayerController : MonoBehaviour {
 		usable = null;
 	}
 
-	 
+	//  This function is a setter for the horizMove bool
+	//  Parameters:			bool, F = canMove, T = can'tMove
+	public void LockHorizontalMovement(bool b)
+	{
+		horizLock = b;
+	}
 
-
+	//  This function is what all units who can move vertically
+	//  on a ladder will have to inform the elevator of what movement
+	//  to make.
+	public LAD_MOVEMENT GetLadMovement()
+	{
+		return ladMove;
+	}
 }
