@@ -24,7 +24,6 @@ public class Invisiblilityscript : MonoBehaviour {
 		if (invisActive) 
 		{
 			duration -= Time.deltaTime;
-
 			if(duration <= 0)
 			{
 				invisActive = false;
@@ -33,18 +32,15 @@ public class Invisiblilityscript : MonoBehaviour {
 				curLight += 1;
 			}
 		}
-
 		if (onCooldown) 
 		{
 			cooldown -= Time.deltaTime;
-
 			if(cooldown <= 0)
 			{
 				cooldown = fullCooldown;
 				onCooldown = false;
 			}
 		}
-
 	}
 
 	public void SetExposure(int i)
