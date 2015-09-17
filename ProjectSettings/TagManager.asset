@@ -3,17 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-<<<<<<< HEAD
-  - chest
-  - world
-=======
-  - Anchor Point
-  - Exit
-  - chest
-  - Floor
-  - Trap Door
->>>>>>> d11afc85f5d8a3488abe281fd646ca3c1c1032c5
+  tags: []
   layers:
   - Default
   - TransparentFX
