@@ -10,13 +10,19 @@ public class PlayerController : MonoBehaviour {
 	public GameObject usable;
 	char upgrades;
 	public int lightExpo;
+	public Transform mainSpawn;
+
+	//Jump variables
+	float jumpForce = 600f;
+	float jumpNumber = 0;
 
 	// Use this for initialization
 	void Start () 
 	{
-		moveSpeed = 3.0f;
+		moveSpeed = 5.0f;
 		onLadder = false;
 		usable = null;
+		transform.position = mainSpawn.transform.position;
 	}
 	
 	// Update is called once per frame
@@ -27,6 +33,14 @@ public class PlayerController : MonoBehaviour {
 			Use ();
 		else if (Input.GetKeyDown ("q"))
 			GetComponent<Invisiblilityscript> ().Invisibility ();
+
+		if (jumpNumber == 0 && Input.GetKeyDown(KeyCode.Space)) 
+		{
+			jumpNumber = 1;
+			GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jumpForce));
+		}
+
+
 	}
 
 	void Movement()
@@ -53,6 +67,7 @@ public class PlayerController : MonoBehaviour {
 
 		//GetComponent<Transform> ().position = new Vector3 (20.0f, 20.0f, 0.0f);
 	}
+
 	void Use()
 	{
 		if (usable == null)
@@ -69,6 +84,11 @@ public class PlayerController : MonoBehaviour {
 	{
 		if (col.gameObject.tag != "Enemy")
 			usable = col.gameObject;
+
+		if (col.gameObject.tag == "Floor" || col.gameObject.tag == "chest") 
+		{
+			jumpNumber = 0;
+		}
 	}
 
 	void OnCollisionExit2D(Collision2D col)

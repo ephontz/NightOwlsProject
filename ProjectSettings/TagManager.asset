@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Anchor Point
   - Exit
+  - chest
+  - Floor
   layers:
   - Default
   - TransparentFX
