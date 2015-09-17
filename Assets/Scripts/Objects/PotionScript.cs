@@ -5,12 +5,12 @@ public class PotionScript : MonoBehaviour {
 
 	public AudioClip sound;
 	bool triggered = false;
-	//GameObject exitDoor;
+	GameObject exitDoor;
 	
 	// Use this for initialization
 	void Start () 
 	{
-		//exitDoor = GameObject.FindWithTag ("Exit");
+		exitDoor = GameObject.FindWithTag ("Exit");
 	}
 	
 	// Update is called once per frame
@@ -35,7 +35,7 @@ public class PotionScript : MonoBehaviour {
 		{
 			GetComponent<AudioSource>().PlayOneShot(sound);
 			triggered = true;
-			//exitDoor.GetComponent<Exit>().Lock = false;
+			exitDoor.GetComponent<ExitDoorScript>().Lock = false;
 		}
 	}
 }

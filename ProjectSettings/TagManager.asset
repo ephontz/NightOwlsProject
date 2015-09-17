@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Anchor Point
+  tags:
+  - Exit
   layers:
   - Default
   - TransparentFX
