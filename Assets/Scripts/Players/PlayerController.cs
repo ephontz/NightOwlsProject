@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum TYPE_DEATH {MELEE = 0, RANGED, SWARM}
+
 public class PlayerController : MonoBehaviour {
 	float moveSpeed;
 	public bool onLadder;
 	public int loot;
 	public GameObject usable;
 	char upgrades;
+	public int lightExpo;
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -40,6 +44,15 @@ public class PlayerController : MonoBehaviour {
 		transform.position = temp;
 	}
 
+	//  This one function will handle the multiple types of death possible to the player
+	//  Parameters:		The function takes in a TYPE_DEATH and uses that to determine
+	//					which actions to take.
+	public void PlayerDeath(TYPE_DEATH method)
+	{
+		this.GetComponent<Invisiblilityscript> ().SetExposure (0);
+
+		//GetComponent<Transform> ().position = new Vector3 (20.0f, 20.0f, 0.0f);
+	}
 	void Use()
 	{
 		if (usable == null)

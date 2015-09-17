@@ -4,8 +4,14 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
   - chest
   - world
+=======
+  - Anchor Point
+  tags:
+  - Exit
+>>>>>>> d11afc85f5d8a3488abe281fd646ca3c1c1032c5
   layers:
   - Default
   - TransparentFX

@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public enum lightLevel {invisible = 0, dark =1, shadow = 2, normal = 3, full = 4, bright = 5}
 
 public class Invisiblilityscript : MonoBehaviour {
 
-	int curLight = 3;
+	public int curLight = 3;
 	bool invisActive = false;
 	bool onCooldown = false;
 	float duration = 3;
@@ -43,6 +43,11 @@ public class Invisiblilityscript : MonoBehaviour {
 		}
 	}
 
+	public void SetExposure(int i)
+	{
+		curLight = i;
+	}
+
 	public void Invisibility()
 	{
 		if (!onCooldown) 
@@ -55,7 +60,7 @@ public class Invisiblilityscript : MonoBehaviour {
 
 	}
 
-	public int Exposure()
+	public int LightExposure()
 	{
 		return curLight;
 	}
