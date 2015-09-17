@@ -20,7 +20,14 @@ public class SaveLoadScript : MonoBehaviour {
 
 	public void SaveLoad()
 	{
+		StartCoroutine (LoadScene ());
+	}
+		
+	IEnumerator LoadScene()
+	{
 		GetComponent<AudioSource>().PlayOneShot(sound);
+		yield return new WaitForSeconds (.3f);
 		Application.LoadLevel("Save-Load Menu");
 	}
+
 }

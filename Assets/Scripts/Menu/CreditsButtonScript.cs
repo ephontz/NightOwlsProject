@@ -18,7 +18,13 @@ public class CreditsButtonScript : MonoBehaviour {
 
 	public void LoadCreditsMenu()
 	{
+		StartCoroutine (LoadScene ());
+	}
+	
+	IEnumerator LoadScene()
+	{
 		GetComponent<AudioSource>().PlayOneShot(sound);
+		yield return new WaitForSeconds (.3f);
 		Application.LoadLevel("Credits Menu");
 	}
 }
