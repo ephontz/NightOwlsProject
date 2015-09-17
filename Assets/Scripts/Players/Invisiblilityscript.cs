@@ -8,10 +8,10 @@ public class Invisiblilityscript : MonoBehaviour {
 	public int curLight = 3;
 	bool invisActive = false;
 	bool onCooldown = false;
-	float duration = 3;
-	float fullDuration = 3;
-	float cooldown = 30;
-	float fullCooldown = 30;
+	public float duration = 3;
+	public float fullDuration = 3;
+	public float cooldown = 30;
+	public float fullCooldown = 30;
 
 	// Use this for initialization
 	void Start () {
