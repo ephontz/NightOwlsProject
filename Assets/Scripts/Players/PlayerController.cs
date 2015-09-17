@@ -23,10 +23,19 @@ public class PlayerController : MonoBehaviour {
 	void Update () 
 	{
 		Movement ();
+
 		if (Input.GetKey ("e"))
 			Use ();
 		else if (Input.GetKeyDown ("q"))
 			GetComponent<Invisiblilityscript> ().Invisibility ();
+	}
+
+
+	//  Fixed Update is called every two frames and should be used for any Rigid
+	//  Body or Physics functionality
+	void FixedUpdate()
+	{
+
 	}
 
 	void Movement()
@@ -49,7 +58,8 @@ public class PlayerController : MonoBehaviour {
 	//					which actions to take.
 	public void PlayerDeath(TYPE_DEATH method)
 	{
-		this.GetComponent<Invisiblilityscript> ().SetExposure (0);
+		if (method == TYPE_DEATH.MELEE)
+			this.GetComponent<Invisiblilityscript> ().SetExposure (0);
 
 		//GetComponent<Transform> ().position = new Vector3 (20.0f, 20.0f, 0.0f);
 	}
