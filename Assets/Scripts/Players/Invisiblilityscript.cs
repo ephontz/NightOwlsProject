@@ -8,10 +8,10 @@ public class Invisiblilityscript : MonoBehaviour {
 	public int curLight = 3;
 	bool invisActive = false;
 	bool onCooldown = false;
-	float duration = 3;
-	float fullDuration = 3;
-	float cooldown = 30;
-	float fullCooldown = 30;
+	public float duration = 3;
+	public float fullDuration = 3;
+	public float cooldown = 30;
+	public float fullCooldown = 30;
 
 	// Use this for initialization
 	void Start () {
@@ -24,7 +24,6 @@ public class Invisiblilityscript : MonoBehaviour {
 		if (invisActive) 
 		{
 			duration -= Time.deltaTime;
-
 			if(duration <= 0)
 			{
 				invisActive = false;
@@ -33,18 +32,15 @@ public class Invisiblilityscript : MonoBehaviour {
 				curLight += 1;
 			}
 		}
-
 		if (onCooldown) 
 		{
 			cooldown -= Time.deltaTime;
-
 			if(cooldown <= 0)
 			{
 				cooldown = fullCooldown;
 				onCooldown = false;
 			}
 		}
-
 	}
 
 	public void SetExposure(int i)
