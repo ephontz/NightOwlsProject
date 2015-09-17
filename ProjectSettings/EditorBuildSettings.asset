@@ -13,6 +13,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Save-Load Menu.unity
   - enabled: 1
     path: Assets/Scenes/Options Menu.unity
+  - enabled: 1
+    path: Assets/Scenes/Credits Menu.unity
   - enabled: 0
     path: Assets/Scenes/Shop Menu.unity
   - enabled: 0
