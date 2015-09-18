@@ -42,7 +42,7 @@ public class LadderBehavior : MonoBehaviour {
 			Instantiate (prefab,spawnPoint, Quaternion.identity) as GameObject;
 
 		tempElevator.GetComponent<ElevatorBehavior> ().parent = currObj;
-
+		tempElevator.GetComponent<ElevatorBehavior> ().user = coll.gameObject;
 		elevators.Add (tempElevator);
 	}
 
