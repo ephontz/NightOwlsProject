@@ -11,7 +11,7 @@ public class LadderBehavior : MonoBehaviour {
 	public GameObject prefab;
 
 	//  The ladder needs to be able to tell children who they belong to.
-	public GameObject currObj;
+	//public GameObject currObj;
 
 	// Use this for initialization
 	void Start () {
@@ -41,7 +41,8 @@ public class LadderBehavior : MonoBehaviour {
 		tempElevator = 
 			Instantiate (prefab,spawnPoint, Quaternion.identity) as GameObject;
 
-		tempElevator.GetComponent<ElevatorBehavior> ().parent = currObj;
+		tempElevator.GetComponent<ElevatorBehavior> ().parent = this.gameObject;
+		tempElevator.GetComponent<ElevatorBehavior> ().user = coll.gameObject;
 
 		elevators.Add (tempElevator);
 	}
