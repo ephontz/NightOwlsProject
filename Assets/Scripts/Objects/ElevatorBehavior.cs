@@ -44,7 +44,7 @@ public class ElevatorBehavior : MonoBehaviour {
 	{
 		user = coll.gameObject;
 
-		user.GetComponent<PlayerController> ().LockHorizontalMovement (true);
+		//user.GetComponent<PlayerController> ().LockHorizontalMovement (true);
 	}
 
 
