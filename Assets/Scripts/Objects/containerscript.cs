@@ -38,7 +38,6 @@ public class containerscript : MonoBehaviour {
 
 	public int Payout()
 	{
-		GetComponent<AudioSource> ().Stop ();
 		GetComponent<AudioSource> ().clip = open;
 		GetComponent<AudioSource> ().Play ();
 		GetComponent<AudioSource> ().loop = false;

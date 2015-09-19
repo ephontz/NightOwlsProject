@@ -3,22 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-<<<<<<< HEAD
-  - chest
-  - world
-=======
-  - Anchor Point
-  tags:
-  - Exit
->>>>>>> d11afc85f5d8a3488abe281fd646ca3c1c1032c5
+  tags: []
   layers:
-  - Default
-  - TransparentFX
-  - Ignore Raycast
-  - 
-  - Water
-  - UI
   - 
   - 
   - 
@@ -45,7 +31,10 @@ TagManager:
   - 
   - 
   - 
-  m_SortingLayers:
-  - name: Default
-    uniqueID: 0
-    locked: 0
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers: []

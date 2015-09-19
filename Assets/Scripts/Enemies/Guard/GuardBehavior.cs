@@ -330,7 +330,7 @@ public class GuardBehavior : EnemyBase {
 	{
 		if (cState == ENMY_STATES.PATROL) 
 		{
-			switch (player.GetComponent<Invisiblilityscript> ().LightExposure ()) 
+			switch ((int)player.GetComponent<Invisiblilityscript> ().LightExposure ()) 
 			{
 			//  If the light exposure is 0 or 1
 			case 0:
@@ -379,7 +379,7 @@ public class GuardBehavior : EnemyBase {
 		} 
 
 		else if (cState == ENMY_STATES.SEARCH) {
-			switch (player.GetComponent<Invisiblilityscript> ().LightExposure ()) {
+			switch ((int)player.GetComponent<Invisiblilityscript> ().LightExposure ()) {
 			//  If the light exposure is 0 or 1
 			case 0:
 			case 1:
