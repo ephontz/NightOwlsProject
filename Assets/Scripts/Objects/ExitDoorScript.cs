@@ -7,7 +7,7 @@ public class ExitDoorScript : MonoBehaviour {
 	public bool Lock = true;
 	public AudioClip sound;
 	float playCount = 0f;
-	//public int nxtlvl;
+	public int nxtlvl;
 
 	// Use this for initialization
 	void Start () 
@@ -31,7 +31,7 @@ public class ExitDoorScript : MonoBehaviour {
 	{
 		if (other.tag == "Player" && Lock == false) 
 		{
-			//Application.LoadLevel(nxtlvl);
+			Application.LoadLevel(nxtlvl);
 		}
 	}
 

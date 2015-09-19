@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour {
 	float jumpNumber = 0;
 
 	//  The us of a ladder involves locking x-axis movement
-	bool horizLock;
+	//bool horizLock;
 	//  and allowing the elevator to know whether the unit is moving up or down.
 	public LAD_MOVEMENT ladMove = LAD_MOVEMENT.STAY;
 
@@ -124,10 +124,10 @@ public class PlayerController : MonoBehaviour {
 
 	//  This function is a setter for the horizMove bool
 	//  Parameters:			bool, F = canMove, T = can'tMove
-	public void LockHorizontalMovement(bool b)
-	{
-		horizLock = b;
-	}
+	//public void LockHorizontalMovement(bool b)
+	//{
+	//	horizLock = b;
+	//}
 
 	//  This function is what all units who can move vertically
 	//  on a ladder will have to inform the elevator of what movement
