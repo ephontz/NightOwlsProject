@@ -20,13 +20,26 @@ public class GuardBehavior : EnemyBase {
 	public float reactRange;
 
 	//  The range at which the guard can kill the player
-	public float killRange;
+	float killRange;
 
 	//  The guard stores a refrence to the player assisting the chase habits
 	public GameObject playRef;
+	//public GameObject navigatorPrefab;
+	//bool pathfinding = false;
 
 	//  The position toward which the guard will walk in search and attack modes
 	Vector3 targPos;
+
+	//  The direction the unit is going to move when on a ladder
+	LAD_MOVEMENT ladMove = LAD_MOVEMENT.STAY;
+
+	////  The paths used when coordinated
+	//ArrayList outgoing;
+	//ArrayList returning;
+
+	//  The two sprites that display over the units head
+	public Sprite qMark, xMark;
+	public AudioClip qSound, xSound, fSound;
 
 
 
@@ -39,11 +52,21 @@ public class GuardBehavior : EnemyBase {
 		killRange = 1.0f;
 
 		reactRange = 5.0f;
+
+		//targPos = playRef.GetComponent<Transform> ().position;
 	}
 
 
 	// Update is called once per frame
 	public override void Update () {
+		//if (Mathf.Abs (targPos.y - GetComponent<Transform> ().position.y) > 5.0f && !pathfinding) {
+		//	GameObject temp;
+		//	temp = Instantiate (navigatorPrefab, GetComponent<Transform>().position, Quaternion.identity) as GameObject;
+		//	temp.GetComponent<LadderNavigatorBehavior>().user = this.gameObject;
+		//	temp.GetComponent<LadderNavigatorBehavior>().target = targPos;
+		//	pathfinding = true;
+		//}
+
 		switch (currState)
 		{
 		case ENMY_STATES.PATROL:
@@ -128,7 +151,9 @@ public class GuardBehavior : EnemyBase {
 	{
 		//  Step One:
 		//			The unit moves toward the last known position.
-		if (CheckSign(targPos.x) != CheckSign (srchSpd))
+		if (targPos.x < GetComponent<Transform> ().position.x && CheckSign (srchSpd))
+			srchSpd = -srchSpd;
+		else if (targPos.x > GetComponent<Transform> ().position.x && !CheckSign (srchSpd))
 			srchSpd = -srchSpd;
 
 		GetComponent<Transform> ().position += new Vector3(srchSpd, 0, 0) * Time.deltaTime;
@@ -173,6 +198,9 @@ public class GuardBehavior : EnemyBase {
 			{
 				ChangeENMYState(ENMY_STATES.PATROL);
 
+				if (1 == Random.Range(1, 10))
+					GetComponentInChildren<AlertSpritesBehavior>().PlayClip(fSound);
+
 				targPos = anchorOrig;
 			}
 		}
@@ -188,8 +216,10 @@ public class GuardBehavior : EnemyBase {
 	{
 		//  Step One:
 		//			The unit moves toward the last known position.
-		if (CheckSign (attkSpd) != CheckSign (targPos.x))
-			attkSpd = -attkSpd;
+		if (targPos.x < GetComponent<Transform> ().position.x && CheckSign (srchSpd))
+			srchSpd = -srchSpd;
+		else if (targPos.x > GetComponent<Transform> ().position.x && !CheckSign (srchSpd))
+			srchSpd = -srchSpd;
 
 		GetComponent<Transform> ().position += new Vector3 (attkSpd, 0, 0) * Time.deltaTime;
 
@@ -257,6 +287,9 @@ public class GuardBehavior : EnemyBase {
 
 	}
 
+	//  This function handles advanced pathing.  
+
+
 	//  This function is refactored code with the purpose of changing the
 	//  unit's state.  This is made with plans to also attach the particle system
 	//  and sound alerts to this function.
@@ -264,7 +297,37 @@ public class GuardBehavior : EnemyBase {
 	//  Returns:		void
 	void ChangeENMYState(ENMY_STATES change)
 	{
+
+		if (change == ENMY_STATES.SEARCH && currState != ENMY_STATES.ATTACK) {
+			GetComponentInChildren<AlertSpritesBehavior> ().ChangeSprite (qMark);
+			GetComponentInChildren<AlertSpritesBehavior> ().PlayClip (qSound);
+		} else if (change == ENMY_STATES.SEARCH && currState == ENMY_STATES.ATTACK) {
+			GetComponentInChildren<AlertSpritesBehavior> ().ChangeSprite (qMark);
+			GetComponentInChildren<AlertSpritesBehavior> ().PlayClip (fSound);		
+		}
+		else if (change == ENMY_STATES.ATTACK) {
+			GetComponentInChildren<AlertSpritesBehavior> ().ChangeSprite(xMark);
+			GetComponentInChildren<AlertSpritesBehavior> ().PlayClip(xSound);
+
+		} else
+			GetComponentInChildren<AlertSpritesBehavior> ().ChangeSprite(null);
+
+		
 		currState = change;
+	}
+
+	//  Verticle navigation function will help set the path for the unit to take to the 
+
+	//  This function changes the unit's LAD_MOVEMENT
+	//bool SetLadMovement(LAD_MOVEMENT dir)
+	//{
+	//	return false;
+	//}
+	//
+	//  This function returns the unit's LAD_MOVEMENT
+	public LAD_MOVEMENT GetLadMovement()
+	{
+		return ladMove;
 	}
 
 	//  This function will check the sign of the value
@@ -336,7 +399,7 @@ public class GuardBehavior : EnemyBase {
 			case 0:
 			case 1:
 			{
-				ChangeENMYState(ENMY_STATES.PATROL);
+				//ChangeENMYState(ENMY_STATES.PATROL);
 				break;
 			}
 
@@ -384,7 +447,7 @@ public class GuardBehavior : EnemyBase {
 			case 0:
 			case 1:
 			{
-				ChangeENMYState(ENMY_STATES.SEARCH);
+				//ChangeENMYState(ENMY_STATES.SEARCH);
 				break;
 			}
 
@@ -392,7 +455,7 @@ public class GuardBehavior : EnemyBase {
 			case 2:
 			case 3:
 			{
-				ChangeENMYState(ENMY_STATES.SEARCH);
+				//ChangeENMYState(ENMY_STATES.SEARCH);
 				targPos = player.GetComponent<Transform> ().position;
 				break;
 			}
@@ -454,7 +517,7 @@ public class GuardBehavior : EnemyBase {
 			case 9:
 			case 10:
 			{
-				ChangeENMYState(ENMY_STATES.ATTACK);
+				//ChangeENMYState(ENMY_STATES.ATTACK);
 				targPos = player.GetComponent<Transform> ().position;
 				break;
 			}

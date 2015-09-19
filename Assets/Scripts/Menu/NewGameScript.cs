@@ -22,7 +22,13 @@ public class NewGameScript : MonoBehaviour {
 
 	public void LoadNewGame()
 	{
+		StartCoroutine (LoadScene ());
+	}
+
+	IEnumerator LoadScene()
+	{
 		GetComponent<AudioSource>().PlayOneShot(sound);
+		yield return new WaitForSeconds (.3f);
 		Application.LoadLevel("tutorial");
 	}
 }

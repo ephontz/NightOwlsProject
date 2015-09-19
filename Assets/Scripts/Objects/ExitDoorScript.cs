@@ -8,6 +8,7 @@ public class ExitDoorScript : MonoBehaviour {
 	public AudioClip sound;
 	float playCount = 0f;
 	public int nxtlvl;
+
 	// Use this for initialization
 	void Start () 
 	{

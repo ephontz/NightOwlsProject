@@ -23,7 +23,14 @@ public class OptionsScript : MonoBehaviour {
 	//The function that's called when clicked.
 	public void OptionsMenu()
 	{
+		StartCoroutine (LoadScene ());
+	}
+
+	IEnumerator LoadScene()
+	{
 		GetComponent<AudioSource>().PlayOneShot(sound);
+		yield return new WaitForSeconds (.3f);
 		Application.LoadLevel("Options Menu");
 	}
+
 }
